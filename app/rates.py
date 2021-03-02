@@ -2,7 +2,9 @@ from flask import Blueprint, request, jsonify
 
 from . rates_queries import find_avg_prices, find_avg_prices_null
 
-rates_bp = Blueprint('rates', __name__)
+import os
+
+rates_bp = Blueprint('rates_bp', __name__)
 
 # seems like adding a JSONEncoder is also a possibility, but kept it simple for now
 def map_avg_price(avg_price):
