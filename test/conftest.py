@@ -1,7 +1,7 @@
 import pytest
 
 from app import create_app
-from app.database import database
+from app.database import database, stop_postgres_container
 
 @pytest.fixture
 def app():
@@ -17,3 +17,6 @@ def database():
 @pytest.fixture
 def rest_client(app):
     return app.test_client()
+
+def pytest_unconfigure(config):
+    stop_postgres_container()

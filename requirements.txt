@@ -1,5 +1,6 @@
-Flask
-Flask-SQLAlchemy
-psycopg2-binary
-pytest
-testcontainers
+Flask==1.1.2
+Flask-SQLAlchemy==2.4.4
+psycopg2-binary==2.8.6
+pytest==6.2.2
+testcontainers==3.2.0
+blinker==1.4
