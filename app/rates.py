@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from datetime import date
 
 from . rates_queries import find_avg_prices, find_avg_prices_null, insert_prices, insert_prices_experimental
+from . currency_conversion import convert_to_usd
 
 import os
 
@@ -54,6 +55,9 @@ def add_rate():
     orig_code = body['origin_code']
     dest_code = body['destination_code']
     price = body['price']
+
+    if isinstance(price, dict):
+        price = convert_to_usd(price['amount'], price['currency'])
 
     date_from = date.fromisoformat(date_from)
     date_to = date.fromisoformat(date_to)
