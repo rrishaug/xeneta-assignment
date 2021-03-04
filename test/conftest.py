@@ -1,3 +1,7 @@
+import os
+
+os.environ['OPEN_EX_RATES_API_KEY'] = 'DUMMY_API_KEY'
+
 import pytest
 
 from app import create_app
@@ -6,11 +10,10 @@ from app.database import database, stop_postgres_container
 @pytest.fixture
 def app():
     test_app = create_app()
-    # test_ctx = test_app.test_request_context()
-    # test_ctx.push()
     return test_app
 
-@pytest.fixture(autouse=True)
+# TODO reset db between tests, could submodule the ratestask repo. Then truncate db between tests and use the .sql file to restore initial state
+@pytest.fixture()
 def database():
     return database
 

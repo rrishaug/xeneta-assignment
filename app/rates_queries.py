@@ -119,3 +119,5 @@ def insert_prices_experimental(date_from: date, date_to: date, orig_code: str, d
     
     database.session.execute(INSERT_PRICE_WITH_DATE_RANGE, params)
     database.session.commit()
+
+    return find_avg_prices(date_from, date_to, orig_code, dest_code)
