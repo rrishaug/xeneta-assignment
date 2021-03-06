@@ -79,22 +79,18 @@ def test_get_rates_null_expect_null(app, rest_client):
     expected_avg_prices = [
         {
             "avg_price": None,
-            "day": "2016-01-01"
+            "day": "2016-01-09"
         },
         {
             "avg_price": None,
-            "day": "2016-01-02"
-        },
-        {
-            "avg_price": None,
-            "day": "2016-01-03"
+            "day": "2016-01-10"
         }
     ]
 
     date_from = '2016-01-01'
-    date_to = '2016-01-03'
+    date_to = '2016-01-10'
     origin = 'CNGGZ'
-    destination = 'NOSVG'
+    destination = 'ESVGO'
 
     with app.test_request_context():
         url = url_for(

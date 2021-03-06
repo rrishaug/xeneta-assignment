@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  ratestask-db:
+    container_name: ratestask-db
+    build: ratestask
+    image: ratestask-db
+    network_mode: host
+    ports:
+      - "5432:5432"
+    environment:
+      PGPASSWORD: "ratestask"
+  ratestask-service:
+    container_name: ratestask-service
+    depends_on:
+      - ratestask-db
+    build: .
+    image: ratestask-service
+    network_mode: host
+    ports:
+      - "5000:5000"
+    environment:
+      # Should be stored as a secret
+      OPEN_EX_RATES_API_KEY: "fa8bd012d91e422faf3313e657ce81a5"

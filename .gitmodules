@@ -1,0 +1,3 @@
+[submodule "ratestask"]
+	path = ratestask
+	url = git@github.com:xeneta/ratestask.git

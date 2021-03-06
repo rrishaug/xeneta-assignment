@@ -2,6 +2,10 @@ from . database import database
 
 from datetime import date, timedelta
 
+'''
+depending on the size of the dataset it might be more efficient to add some logic in python to classify the origin and destination as
+either port, region or parent_region and build the SQL based on this. Instead of or conditions over 3 columns
+'''
 FIND_AVG_PRICE_SQL = """
     select p.day as day, cast(round(avg(p.price)) as int) as avg_price, count(p.price) as price_count
     from prices p
@@ -84,7 +88,7 @@ def find_avg_prices_null(date_from: date, date_to: date, origin: str, destinatio
     rows = database.session.execute(FIND_AVG_PRICE_NULL_SQL, params)
     return [map_avg_price_row(row) for row in rows]
 
-def insert_prices(date_from: date, date_to: date, orig_code: str, dest_code: str, price: int):
+def insert_prices_loop(date_from: date, date_to: date, orig_code: str, dest_code: str, price: int):
     date = date_from
 
     while date <= date_to:
@@ -101,10 +105,10 @@ def insert_prices(date_from: date, date_to: date, orig_code: str, dest_code: str
     database.session.commit()
 
 
-def insert_prices_experimental(date_from: date, date_to: date, orig_code: str, dest_code: str, price: int):
+def insert_prices(date_from: date, date_to: date, orig_code: str, dest_code: str, price: int):
     '''
     Depending on size of date range its probably easier to let postgres create the date range
-    For small date ranges the looping function seems slightly faster from some quick testing of the rest calls
+    For small date ranges the looping function above seems slightly faster from some quick testing of the rest calls
     For larger batches allowing postgres to create the range seems significantly faster
     Could use both and add some logic to decide which to select based on size of the date range
     '''

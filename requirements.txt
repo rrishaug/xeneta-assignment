@@ -3,6 +3,5 @@ Flask-SQLAlchemy==2.4.4
 psycopg2-binary==2.8.6
 pytest==6.2.2
 testcontainers==3.2.0
-blinker==1.4
 requests==2.25.1
 httpretty==1.0.5

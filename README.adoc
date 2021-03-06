@@ -1,0 +1,39 @@
+= README
+
+== Initialize
+[source,cli]
+----
+git clone git@github.com:rrishaug/xeneta-assignment.git
+cd xeneta-assignment
+git submodule update --init
+python3.8 -m venv venv
+source venv/bin/activate
+pip install -r -requirements
+----
+
+== Starting with docker
+There is a docker-compose setup that should let you start the db and flask service without needing to
+initialize/configure the venv
+[source,cli]
+----
+git clone git@github.com:rrishaug/xeneta-assignment.git
+cd xeneta-assignment
+git submodule update --init
+docker-compose up
+----
+
+== Development
+
+You can run the run-flask-development script after cloning. This script will also initialize/update the venv.
+Then run the flask service in development mode
+[source,cli]
+----
+./run-flask-development
+----
+
+== Tests
+After initializing the python venv, you can run the following command to run tests
+[source,cli]
+----
+pytest
+----

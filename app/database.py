@@ -15,7 +15,7 @@ def stop_postgres_container():
         postgres_container.stop()
 
 if testing:
-    postgres_container = PostgresContainer("ratestask:latest")
+    postgres_container = PostgresContainer("ratestask-db:latest")
     postgres_container.start()
     SQLALCHEMY_DATABASE_URI = postgres_container.get_connection_url()
 else:

@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
 from datetime import date
 
-from . rates_queries import find_avg_prices, find_avg_prices_null, insert_prices, insert_prices_experimental
+from . rates_queries import find_avg_prices, find_avg_prices_null, insert_prices
 from . currency_conversion import convert_to_usd, get_currency_rates
 from . exceptions import *
+from . globals import logger
 
 import os
 
@@ -11,6 +12,7 @@ rates_bp = Blueprint('rates_bp', __name__)
 
 @rates_bp.errorhandler(ApiException)
 def handle_api_exception(ex: ApiException):
+    logger.error(f"Error occured while handling API request. Code: [{ex.error[CODE_KEY]}], Message: [{ex.error[MSG_KEY]}]")
     return jsonify(ex.error), ex.status_code
 
 # seems like adding a JSONEncoder is also a possibility, but kept it simple for now
@@ -133,8 +135,6 @@ def add_rate():
     date_from = date.fromisoformat(date_from_str)
     date_to = date.fromisoformat(date_to_str)
 
-    # created a insert function that creates the date range in postgres instead of looping or batch inserts in python
-    # insert_prices(date_from, date_to, orig_code, dest_code, price)
-    results = insert_prices_experimental(date_from, date_to, orig_code, dest_code, price)
+    results = insert_prices(date_from, date_to, orig_code, dest_code, price)
 
     return jsonify([map_avg_price(r) for r in results]), 200

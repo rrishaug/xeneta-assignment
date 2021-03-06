@@ -19,6 +19,7 @@ def fetch_latest_rates():
 
     if r.status_code != 200:
         logger.error("Failed to fetch exchange rates response")
+        # should probably have another exeception type in case the conversion was not a result of incoming API call
         raise ApiException(INTERNAL_SERVER_ERROR, status_code=500)
 
     return r.json()['rates']
