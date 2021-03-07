@@ -2,10 +2,6 @@ from . database import database
 
 from datetime import date, timedelta
 
-'''
-depending on the size of the dataset it might be more efficient to add some logic in python to classify the origin and destination as
-either port, region or parent_region and build the SQL based on this. Instead of or conditions over 3 columns
-'''
 FIND_AVG_PRICE_SQL = """
     select p.day as day, cast(round(avg(p.price)) as int) as avg_price, count(p.price) as price_count
     from prices p
@@ -15,16 +11,14 @@ FIND_AVG_PRICE_SQL = """
         from ports prt
           join regions reg on prt.parent_slug = reg.slug
         where prt.code = :origin
-          or prt.parent_slug = :origin
-          or reg.parent_slug = :origin
+          or prt.parent_slug in (select child_slug from region_hierarchy where parent_slug = :origin)
     )
       and p.dest_code in (
         select prt.code
         from ports prt
           join regions reg on prt.parent_slug = reg.slug
         where prt.code = :destination
-          or prt.parent_slug = :destination
-          or reg.parent_slug = :destination
+          or prt.parent_slug in (select child_slug from region_hierarchy where parent_slug = :destination)
     ) 
     group by day
     order by day

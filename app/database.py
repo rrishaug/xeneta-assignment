@@ -1,6 +1,7 @@
 import sys
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 from testcontainers.postgres import PostgresContainer
 
@@ -22,3 +23,5 @@ else:
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:ratestask@localhost/postgres"
 
 database = SQLAlchemy()
+
+migrate = Migrate(db=database)

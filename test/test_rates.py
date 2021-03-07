@@ -28,15 +28,15 @@ def test_get_rates(app, rest_client):
     origin = 'CNSGH'
     destination = 'north_europe_main'
 
-    with app.test_request_context():
-        url = url_for(
-            'rates_bp.get_rates',
-            date_from=date_from,
-            date_to=date_to,
-            origin=origin,
-            destination=destination
-        )
-        response = rest_client.get(url)
+    # with app.test_request_context():
+    url = url_for(
+        'rates_bp.get_rates',
+        date_from=date_from,
+        date_to=date_to,
+        origin=origin,
+        destination=destination
+    )
+    response = rest_client.get(url)
 
     assert len(response.json) == len(expected_avg_prices)
     assert response.json == expected_avg_prices
@@ -62,15 +62,14 @@ def test_get_rates_null_expect_not_null(app, rest_client):
     origin = 'CNSGH'
     destination = 'north_europe_main'
 
-    with app.test_request_context():
-        url = url_for(
-            'rates_bp.get_rates_null',
-            date_from=date_from,
-            date_to=date_to,
-            origin=origin,
-            destination=destination
-        )
-        response = rest_client.get(url)
+    url = url_for(
+        'rates_bp.get_rates_null',
+        date_from=date_from,
+        date_to=date_to,
+        origin=origin,
+        destination=destination
+    )
+    response = rest_client.get(url)
 
     assert len(response.json) == len(expected_avg_prices)
     assert response.json == expected_avg_prices
@@ -92,15 +91,14 @@ def test_get_rates_null_expect_null(app, rest_client):
     origin = 'CNGGZ'
     destination = 'ESVGO'
 
-    with app.test_request_context():
-        url = url_for(
-            'rates_bp.get_rates_null',
-            date_from=date_from,
-            date_to=date_to,
-            origin=origin,
-            destination=destination
-        )
-        response = rest_client.get(url)
+    url = url_for(
+        'rates_bp.get_rates_null',
+        date_from=date_from,
+        date_to=date_to,
+        origin=origin,
+        destination=destination
+    )
+    response = rest_client.get(url)
 
     assert len(response.json) == len(expected_avg_prices)
     assert response.json == expected_avg_prices
@@ -123,15 +121,14 @@ def test_get_rates_null_expect_null(app, rest_client):
     ]
 )
 def test_get_rates_given_invalid_params(app, rest_client, route, date_from, date_to, origin, destination, expected_error):
-    with app.test_request_context():
-        url = url_for(
-            f"rates_bp.{route}",
-            date_from=date_from,
-            date_to=date_to,
-            origin=origin,
-            destination=destination
-        )
-        response = rest_client.get(url)
+    url = url_for(
+        f"rates_bp.{route}",
+        date_from=date_from,
+        date_to=date_to,
+        origin=origin,
+        destination=destination
+    )
+    response = rest_client.get(url)
 
     assert response.json == expected_error
 
@@ -158,19 +155,18 @@ def test_add_rate(app, rest_client, database):
         "price": 1234
     }
 
-    with app.test_request_context():
-        get_url = url_for(
-            'rates_bp.get_rates',
-            date_from=rate['date_from'],
-            date_to=rate['date_to'],
-            origin=rate['origin_code'],
-            destination=rate['destination_code']
-        )
-        post_url = url_for('rates_bp.add_rate')
+    get_url = url_for(
+        'rates_bp.get_rates',
+        date_from=rate['date_from'],
+        date_to=rate['date_to'],
+        origin=rate['origin_code'],
+        destination=rate['destination_code']
+    )
+    post_url = url_for('rates_bp.add_rate')
 
-        get_1_response = rest_client.get(get_url)
-        post_response = rest_client.post(post_url, json=rate)
-        get_2_response = rest_client.get(get_url)
+    get_1_response = rest_client.get(get_url)
+    post_response = rest_client.post(post_url, json=rate)
+    get_2_response = rest_client.get(get_url)
 
     assert get_1_response.status_code == 200
     assert post_response.status_code == 200
@@ -209,19 +205,18 @@ def test_add_rate_with_conversion(app, rest_client):
         }
     }
 
-    with app.test_request_context():
-        get_url = url_for(
-            'rates_bp.get_rates',
-            date_from=rate['date_from'],
-            date_to=rate['date_to'],
-            origin=rate['origin_code'],
-            destination=rate['destination_code']
-        )
-        post_url = url_for('rates_bp.add_rate')
+    get_url = url_for(
+        'rates_bp.get_rates',
+        date_from=rate['date_from'],
+        date_to=rate['date_to'],
+        origin=rate['origin_code'],
+        destination=rate['destination_code']
+    )
+    post_url = url_for('rates_bp.add_rate')
 
-        get_1_response = rest_client.get(get_url)
-        post_response = rest_client.post(post_url, json=rate)
-        get_2_response = rest_client.get(get_url)
+    get_1_response = rest_client.get(get_url)
+    post_response = rest_client.post(post_url, json=rate)
+    get_2_response = rest_client.get(get_url)
 
     assert get_1_response.status_code == 200
     assert post_response.status_code == 200
@@ -259,16 +254,15 @@ def test_add_rate_given_invalid_params_expect_error(app, rest_client, date_from,
     }
     httpretty.register_uri(httpretty.GET, open_ex_api_url, body=json.dumps(latest_ex_rates))
 
-    with app.test_request_context():
-        url = url_for('rates_bp.add_rate')
-        body = {
-            "date_from": date_from,
-            "date_to": date_to,
-            "origin_code": origin_code,
-            "destination_code": destination_code,
-            "price": price
-        }
+    url = url_for('rates_bp.add_rate')
+    body = {
+        "date_from": date_from,
+        "date_to": date_to,
+        "origin_code": origin_code,
+        "destination_code": destination_code,
+        "price": price
+    }
 
-        response = rest_client.post(url, json=body)
+    response = rest_client.post(url, json=body)
 
     assert response.json == expected_error

@@ -12,5 +12,7 @@ RUN pip install -r requirements.txt
 ENV FLASK_APP=app/__init__.py
 
 COPY app app
+COPY migrations migrations
+COPY start-flask-with-migrations start-flask-with-migrations
 
-ENTRYPOINT [ "flask", "run" ]
+ENTRYPOINT [ "sh", "start-flask-with-migrations" ]
