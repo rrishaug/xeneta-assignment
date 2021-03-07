@@ -58,6 +58,7 @@ def get_rates():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
 
+    # could add some validation to check if the origin and destination exists
     validate_date_from_and_date_to(date_from, date_to)
     validate_origin_and_destination(origin, destination)
 
@@ -77,6 +78,7 @@ def get_rates_null():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
 
+    # could add some validation to check if the origin and destination exists
     validate_date_from_and_date_to(date_from, date_to)
     validate_origin_and_destination(origin, destination)
 
@@ -120,6 +122,7 @@ def add_rate():
     dest_code = body['destination_code']
     price_param = body['price']
 
+    # could add some validation to check if the origin and destination exists
     validate_date_from_and_date_to(date_from_str, date_to_str)
     validate_origin_and_destination(orig_code, dest_code)
 
@@ -135,6 +138,6 @@ def add_rate():
     date_from = date.fromisoformat(date_from_str)
     date_to = date.fromisoformat(date_to_str)
 
-    results = insert_prices(date_from, date_to, orig_code, dest_code, price)
+    insert_prices(date_from, date_to, orig_code, dest_code, price)
 
-    return jsonify([map_avg_price(r) for r in results]), 200
+    return "", 200

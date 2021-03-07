@@ -32,8 +32,51 @@ Then run the flask service in development mode
 ----
 
 == Tests
-After initializing the python venv, you can run the following command to run tests
+Requires the docker image of the databse to be built.
+[source,cli]
+----
+docker-compose build
+----
+After initializing the python venv and building the docker image for the database, you can run the
+following command to run tests
 [source,cli]
 ----
 pytest
 ----
+
+== https://github.com/xeneta/ratestask#task-2-batch-processing-task[Task 2]
+
+If i were to modify the solution to better handle large batches of data there are a couple of
+things that i would change.
+
+=== API
+
+For the REST api I would definetly modify the existing or add a new POST method to take a set/list
+of prices in the body. To avoid the increased latency and resources necessary to handle
+thousands of separate HTTP calls.
+
+Handling the requests asynchronously may also be a good idea depending on the amount of traffic.
+You could save the raw json as a file or into some database that handles the format well. Then
+return a 202 ACCEPTED status. This could then be submitted to some job/queue system for processing.
+This would avoid some possibly long running http requests, and allow for spreading the processing
+both in time and possibly across multiple hosts. In case of failures or validation errors you
+probably require some way to notify the client. There are many ways this could be handled, for example
+websocket, webhook or MQ. Otherwise exposing a REST endpoint where the client can fetch the status
+could also be a solution.
+
+=== Service
+
+Depending on the size of the incoming list/set of prices i would probably split the prices into
+batches to make sure that each transactions to validate and insert run in a reasonable time and does not
+reach a transaction timeout.
+To make the inserts against the database you should use batch/bulk insert if available, this
+should perform much better than attempts at making simple inserts using a loop in code.
+Toggling the synchronous commit parameter in postgres might also give some increase in insert performance.
+But we should make sure its worth the drawbacks.
+
+=== Database
+
+To handle large amounts of inserts its also a good idea to make sure the database is runnning on
+good hardware, especially disks. Should probably be using SSDs these days.
+For postgres there are also some settings that could modified to increase performance. Like the
+size of the WAL buffer.

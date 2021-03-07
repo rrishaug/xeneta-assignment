@@ -3,25 +3,28 @@ from . database import database
 from datetime import date, timedelta
 
 FIND_AVG_PRICE_SQL = """
-    select p.day as day, cast(round(avg(p.price)) as int) as avg_price, count(p.price) as price_count
+    select
+      p.day as day,
+      cast(round(avg(p.price)) as int) as avg_price,
+      count(p.price) as price_count
     from prices p
     where p.day between :fromDate and :toDate
       and p.orig_code in (
-        select prt.code
-        from ports prt
-          join regions reg on prt.parent_slug = reg.slug
-        where prt.code = :origin
-          or prt.parent_slug in (select child_slug from region_hierarchy where parent_slug = :origin)
+        select prt_orig.code
+        from ports prt_orig
+          join regions reg_orig on prt_orig.parent_slug = reg_orig.slug
+        where prt_orig.code = :origin
+          or prt_orig.parent_slug in (select child_slug from region_hierarchy where parent_slug = :origin)
     )
       and p.dest_code in (
-        select prt.code
-        from ports prt
-          join regions reg on prt.parent_slug = reg.slug
-        where prt.code = :destination
-          or prt.parent_slug in (select child_slug from region_hierarchy where parent_slug = :destination)
+        select prt_dest.code
+        from ports prt_dest
+          join regions reg_dest on prt_dest.parent_slug = reg_dest.slug
+        where prt_dest.code = :destination
+          or prt_dest.parent_slug in (select child_slug from region_hierarchy where parent_slug = :destination)
     ) 
-    group by day
-    order by day
+    group by p.day
+    order by p.day
 """
 
 PRICE_COUNT_THRESHOLD_VALUE = 3
@@ -117,5 +120,3 @@ def insert_prices(date_from: date, date_to: date, orig_code: str, dest_code: str
     
     database.session.execute(INSERT_PRICE_WITH_DATE_RANGE, params)
     database.session.commit()
-
-    return find_avg_prices(date_from, date_to, orig_code, dest_code)

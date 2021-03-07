@@ -176,7 +176,6 @@ def test_add_rate(app, rest_client, database):
     assert len(get_2_response.json) == 3
 
     assert get_2_response.json == expected_get_2_result
-    assert post_response.json == expected_get_2_result
 
 @httpretty.activate
 def test_add_rate_with_conversion(app, rest_client):
