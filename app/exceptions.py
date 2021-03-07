@@ -46,7 +46,6 @@ INTERNAL_SERVER_ERROR = {
     MSG_KEY: "Internal server error"
 }
 
-# may be a good idea to add some error code along with the message
 class ApiException(Exception):
 
     def __init__(self, error, status_code=400):

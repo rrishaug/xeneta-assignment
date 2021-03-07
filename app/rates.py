@@ -36,10 +36,6 @@ def validate_date_from_and_date_to(date_from_str: str, date_to_str: str):
     except ValueError:
         raise ApiException(DATE_TO_INVALID_FORMAT)
 
-
-    date_from = date.fromisoformat(date_from_str)
-    date_to = date.fromisoformat(date_to_str)
-
     if date_from > date_to:
         raise ApiException(DATE_FROM_AFTER_DATE_TO)
 

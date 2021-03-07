@@ -10,10 +10,16 @@ services:
       - "5432:5432"
     environment:
       PGPASSWORD: "ratestask"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   ratestask-service:
     container_name: ratestask-service
     depends_on:
-      - ratestask-db
+      ratestask-db:
+        condition: service_healthy
     build: .
     image: ratestask-service
     network_mode: host
